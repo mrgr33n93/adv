@@ -10,6 +10,14 @@ interface LawyerCardProps {
 }
 
 export default function LawyerCard({ lawyer }: LawyerCardProps) {
+  const handleWhatsAppClick = () => {
+    if (lawyer.whatsappNumber) {
+      const cleanNumber = lawyer.whatsappNumber.replace(/\D/g, '');
+      const message = encodeURIComponent(`Olá! Vi seu perfil no Advogados MT e gostaria de conversar sobre serviços jurídicos.`);
+      window.open(`https://wa.me/55${cleanNumber}?text=${message}`, '_blank');
+    }
+  };
+
   return (
     <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-6">
       <div className="flex items-start space-x-4">
@@ -91,7 +99,11 @@ export default function LawyerCard({ lawyer }: LawyerCardProps) {
             </Link>
 
             {lawyer.isPremium && lawyer.whatsappNumber && (
-              <Button size="sm" className="bg-green-600 hover:bg-green-700">
+              <Button 
+                size="sm" 
+                className="bg-green-600 hover:bg-green-700"
+                onClick={handleWhatsAppClick}
+              >
                 WhatsApp
               </Button>
             )}

@@ -29,6 +29,20 @@ export default function LawyerDetailPage() {
     enabled: !!id,
   });
 
+  const handleWhatsAppClick = () => {
+    if (lawyer?.whatsappNumber) {
+      const cleanNumber = lawyer.whatsappNumber.replace(/\D/g, '');
+      const message = encodeURIComponent(`Olá! Vi seu perfil no Advogados MT e gostaria de conversar sobre serviços jurídicos.`);
+      window.open(`https://wa.me/55${cleanNumber}?text=${message}`, '_blank');
+    }
+  };
+
+  const handleEmailClick = () => {
+    const subject = encodeURIComponent('Contato via Advogados MT');
+    const body = encodeURIComponent(`Olá! Vi seu perfil no Advogados MT e gostaria de conversar sobre serviços jurídicos.`);
+    window.open(`mailto:?subject=${subject}&body=${body}`, '_blank');
+  };
+
   if (isLoading) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -130,12 +144,15 @@ export default function LawyerDetailPage() {
 
           <div className="flex flex-col space-y-2">
             {lawyer.isPremium && lawyer.whatsappNumber && (
-              <Button className="bg-green-600 hover:bg-green-700">
+              <Button 
+                className="bg-green-600 hover:bg-green-700"
+                onClick={handleWhatsAppClick}
+              >
                 <MessageCircle className="h-4 w-4 mr-2" />
                 WhatsApp
               </Button>
             )}
-            <Button variant="outline">
+            <Button variant="outline" onClick={handleEmailClick}>
               <Mail className="h-4 w-4 mr-2" />
               Enviar Mensagem
             </Button>

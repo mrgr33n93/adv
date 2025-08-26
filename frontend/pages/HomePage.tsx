@@ -1,10 +1,26 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Search, Users, Award, Shield, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 export default function HomePage() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      navigate(`/advogados?search=${encodeURIComponent(searchTerm.trim())}`);
+    } else {
+      navigate("/advogados");
+    }
+  };
+
+  const handleSpecialtyClick = (specialty: string) => {
+    navigate(`/advogados?search=${encodeURIComponent(specialty)}`);
+  };
+
   return (
     <div>
       {/* Hero Section */}
@@ -21,21 +37,21 @@ export default function HomePage() {
             </p>
             
             <div className="max-w-2xl mx-auto mb-8">
-              <div className="flex flex-col sm:flex-row gap-4">
+              <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-4">
                 <div className="flex-1 relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
                   <Input
                     placeholder="Buscar por especialidade ou cidade..."
                     className="pl-10 h-12 text-gray-900"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
                   />
                 </div>
-                <Link to="/advogados">
-                  <Button size="lg" className="w-full sm:w-auto bg-white text-blue-600 hover:bg-gray-100">
-                    Buscar Advogados
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </Link>
-              </div>
+                <Button type="submit" size="lg" className="w-full sm:w-auto bg-white text-blue-600 hover:bg-gray-100">
+                  Buscar Advogados
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </form>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
@@ -98,13 +114,13 @@ export default function HomePage() {
               "Direito do Consumidor",
               "Direito Ambiental",
             ].map((specialty) => (
-              <Link
+              <button
                 key={specialty}
-                to={`/advogados?specialty=${encodeURIComponent(specialty)}`}
-                className="bg-white rounded-lg p-4 text-center hover:shadow-md transition-shadow border"
+                onClick={() => handleSpecialtyClick(specialty)}
+                className="bg-white rounded-lg p-4 text-center hover:shadow-md transition-shadow border hover:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <h3 className="font-medium text-gray-900">{specialty}</h3>
-              </Link>
+              </button>
             ))}
           </div>
         </div>
